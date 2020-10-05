@@ -447,7 +447,7 @@ function init_player(params_json, csrf_token) {
     channel_bar.onkeydown(e);
   };
 
-  load_script('/static/puffer/js/puffer.js').onload = function() {
+  load_script('/static/js/puffer.js').onload = function() {
     var ws_client = new WebSocketClient(
       session_key, username, settings_debug, port, csrf_token, sysinfo);
 

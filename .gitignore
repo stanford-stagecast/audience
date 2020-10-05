@@ -1,3 +1,5 @@
 .DS_Store
 /build
 /.vscode
+*.yml
+db.sqlite3
