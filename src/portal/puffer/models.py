@@ -11,32 +11,6 @@ class UserProfile(models.Model):
     last_session_key = models.CharField(max_length=64, default='')
 
 
-class GrafanaSnapshot(models.Model):
-    url = models.URLField()
-    created_on = models.DateTimeField()
-
-
-class Rating(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment_text = models.CharField(max_length=500, default='')
-    stars = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(5)], default=0)
-    pub_date = models.DateTimeField('date published')
-
-    def __str__(self):
-        return '{}-{}-{}'.format(self.user, self.stars, self.comment_text)
-
-
-class Participate(models.Model):
-    email = models.CharField(max_length=255)
-    request_date = models.DateTimeField('date requested')
-    sent = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.email
-
-# classes above are not currrently used
-
 def user_logged_in_handler(sender, request, user, **kwargs):
     curr_session_key = request.session.session_key
 
