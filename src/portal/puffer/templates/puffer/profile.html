@@ -1,0 +1,113 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="{% static 'puffer/dist/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'puffer/css/common.css' %}">
+  <title>Puffer</title>
+  <link rel="icon" href="{% static 'puffer/dist/images/favicon.ico' %}">
+</head>
+
+<body>
+  <!-- Navigation -->
+  {% include "puffer/navigation.html" %}
+
+  <!-- User Info -->
+  <div class="container py-4">
+    <p>Your username: {{ user.username }}</p>
+    <p>
+      Puffer uses an invitation token based system to allow users to invite other users.
+      If you have any invitation tokens, they will show up below. Feel free to share them with
+      friends who would also like to use Puffer.
+    </p>
+    <p><a href="{% url 'participate' %}">Have friends interested in Puffer?</a></p>
+
+    {% if user.is_superuser %}
+    <form class="form-inline" method="post" action="{% url 'profile' %}">
+      {% csrf_token %}
+
+      As an admin, you can generate an invitation token with
+      <div class="form-group">
+        <select type="text" class="form-control mx-2" name="addon-cnt" id="addon-cnt" required>
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+        </select>
+        additional tokens:
+      </div>
+      <button type="submit" class="btn btn-primary ml-2">Generate a token</button>
+    </form>
+    {% endif %}
+
+    {% if user.invitationtoken_set.all %}
+    <br>
+    <p>
+      <strong>Total available invitation tokens:</strong>
+      {{ user.invitationtoken_set.all.count }}
+    </p>
+
+    <div style="max-width:800px">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col" style="width:30%">Unshared tokens</th>
+            <th scope="col" style="width:40%">Addtional tokens to generate</th>
+            <th scope="col" style="width:30%">Once you share...</th>
+          </tr>
+        </thead>
+        <tbody id="unshared-tokens">
+        {% for t in user.invitationtoken_set.all %}
+          {% if not t.shared %}
+          <tr>
+            <td class="text-monospace">{{ t.token }}</td>
+            <td>{{ t.addon_cnt }}</td>
+            <td>
+              <span class="fake-link" onclick="share('{{ t.token }}', this, '{{ csrf_token }}')">
+                mark shared
+              </span>
+            </td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+        </tbody>
+      </table>
+
+      <table class="table table-hover" style="max-width: 800px">
+        <thead>
+          <tr>
+            <th scope="col" style="width:30%">Shared tokens</th>
+            <th scope="col" style="width:40%">Addtional tokens to generate</th>
+            <th scope="col" style="width:30%">Click to unshare...</th>
+          </tr>
+        </thead>
+        <tbody id="shared-tokens">
+        {% for t in user.invitationtoken_set.all %}
+          {% if t.shared %}
+          <tr>
+            <td class="text-monospace">{{ t.token }}</td>
+            <td>{{ t.addon_cnt }}</td>
+            <td>
+              <span class="fake-link" onclick="unshare('{{ t.token }}', this, '{{ csrf_token }}')">
+                mark unshared
+              </span>
+            </td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </div>
+
+  <script src="{% static 'puffer/dist/js/jquery-3.3.1.slim.min.js' %}"></script>
+  <script src="{% static 'puffer/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'puffer/js/profile.js' %}"></script>
+</body>
+
+</html>

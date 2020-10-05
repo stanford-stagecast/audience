@@ -1,0 +1,48 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-md navbar-light border-bottom py-3">
+  <div class="container d-flex">
+    <a class="navbar-brand" href="{% url 'index' %}">
+      <img src="{% static 'puffer/dist/images/logo-text.svg' %}"
+           alt="Puffer" height="25px">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-main"
+            aria-controls="navbar-main" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'player' %}">Watch TV</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'faq' %}">About Puffer</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/StanfordSNR/puffer">Source Code</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink"
+             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Research Study</a>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{% static 'puffer/documents/puffer-paper.pdf' %}">Research Paper</a>
+            <a class="dropdown-item" href="https://youtu.be/63aECX2MZvY">Conference Talk</a>
+            <a class="dropdown-item" href="{% url 'results' %}">Experiment Results</a>
+            <a class="dropdown-item" href="{% url 'data-description' %}">Data Description</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="ml-auto">
+      {% if user.is_authenticated %}
+      <a role="button" class="btn btn-link" href="{% url 'logout' %}">Sign out</a>
+      <span style="vertical-align:middle;">{{ user.username }}</span>
+      {% else %}
+      <a role="button" class="btn btn-primary" href="{% url 'signup' %}">Sign up</a>
+      <a role="button" class="btn btn-outline-primary" href="{% url 'player' %}">Log in</a>
+      {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
