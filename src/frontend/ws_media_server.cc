@@ -29,11 +29,7 @@
 using namespace std;
 using namespace PollerShortNames;
 
-#ifdef NONSECURE
 using WebSocketServer = WebSocketTCPServer;
-#else
-using WebSocketServer = WebSocketSecureServer;
-#endif
 
 /* global variables */
 YAML::Node config;
@@ -696,25 +692,7 @@ int run_websocket_server()
 
   WebSocketServer server {{ip, port}, cc_name};
 
-  const bool portal_debug = config["portal_settings"]["debug"].as<bool>();
-
-  /* workaround using compiler macros (CXXFLAGS='-DNONSECURE') to create a
-   * server with non-secure socket; secure socket is used by default */
-  #ifdef NONSECURE
   cerr << "Launching non-secure WebSocket server on port " << port << endl;
-  if (not portal_debug) {
-    cerr << "Error in YAML config: 'debug' must be true in 'portal_settings'" << endl;
-    return EXIT_FAILURE;
-  }
-  #else
-  server.ssl_context().use_private_key_file(config["ssl_private_key"].as<string>());
-  server.ssl_context().use_certificate_file(config["ssl_certificate"].as<string>());
-  cerr << "Launching secure WebSocket server on port " << port << endl;
-  if (portal_debug) {
-    cerr << "Error in YAML config: 'debug' must be false in 'portal_settings'" << endl;
-    return EXIT_FAILURE;
-  }
-  #endif
 
   /* create Channels and mmap existing and newly created media files */
   Inotify inotify(server.poller());
