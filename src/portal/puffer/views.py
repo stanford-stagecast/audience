@@ -2,7 +2,6 @@ import os
 import json
 import random
 from datetime import datetime
-from influxdb import InfluxDBClient
 
 from django.shortcuts import render, redirect
 from django.contrib import messages

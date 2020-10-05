@@ -24,25 +24,16 @@ yaml_config_path = os.path.join(PUFFER_BASE_DIR, 'src', 'settings.yml')
 with open(yaml_config_path, 'r') as fh:
     yaml_config = yaml.safe_load(fh)
 portal_config = yaml_config['portal_settings']
-postgres_config = yaml_config['postgres_connection']
-
-# INFLUXDB is used for error reporting
-INFLUXDB = None
-if yaml_config['enable_logging'] and 'influxdb_connection' in yaml_config:
-    INFLUXDB = yaml_config['influxdb_connection']
 
 # number of media servers
 WS_BASE_PORT = yaml_config['ws_base_port']
-TOTAL_SERVERS = 0
-for experiment in yaml_config['experiments']:
-    TOTAL_SERVERS += experiment['num_servers']
-assert TOTAL_SERVERS > 0
+TOTAL_SERVERS = 1
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ[portal_config['secret_key']]
+SECRET_KEY = portal_config['secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = portal_config['debug']
@@ -96,38 +87,12 @@ WSGI_APPLICATION = 'portal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-default_db = {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': postgres_config['dbname'],
-    'USER': postgres_config['user'],
-    'PASSWORD': os.environ[postgres_config['password']],
-    'HOST': postgres_config['host'],
-    'PORT': postgres_config['port'],
-}
-
-if 'sslmode' in postgres_config:
-    default_db['OPTIONS'] = {
-        'sslmode': postgres_config['sslmode'],
-        'sslrootcert': postgres_config['sslrootcert'],
-        'sslcert': postgres_config['sslcert'],
-        'sslkey': postgres_config['sslkey'],
-    }
-
 DATABASES = {
-    'default': default_db
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 3,
-        }
-    },
-]
 
 # Password hashers
 PASSWORD_HASHERS = [

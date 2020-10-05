@@ -22,8 +22,8 @@ function ControlBar() {
   var volume_bar = document.getElementById('volume-bar');
   var mute_button = document.getElementById('mute-button');
   var unmute_here = document.getElementById('unmute-here');
-  const volume_on_img = 'url(/static/puffer/dist/images/volume-on.svg)';
-  const volume_off_img = 'url(/static/puffer/dist/images/volume-off.svg)';
+  const volume_on_img = 'url(/static/dist/images/volume-on.svg)';
+  const volume_off_img = 'url(/static/dist/images/volume-off.svg)';
 
   /* video is muted by default */
   video.volume = 0;
@@ -72,7 +72,7 @@ function ControlBar() {
   };
 
   function show_control_bar() {
-    tv_controls.style.opacity = '0.8';
+    tv_controls.style.opacity = '0.5';
     tv_container.style.cursor = 'default';
   }
 
@@ -103,8 +103,8 @@ function ControlBar() {
   };
 
   /* full screen behavior */
-  const enter_fullscreen_img = 'url(/static/puffer/dist/images/enter-fullscreen.svg)';
-  const exit_fullscreen_img = 'url(/static/puffer/dist/images/exit-fullscreen.svg)';
+  const enter_fullscreen_img = 'url(/static/dist/images/enter-fullscreen.svg)';
+  const exit_fullscreen_img = 'url(/static/dist/images/exit-fullscreen.svg)';
 
   var full_screen_button = document.getElementById('full-screen-button');
   full_screen_button.style.backgroundImage = enter_fullscreen_img;
