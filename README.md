@@ -64,6 +64,8 @@ channel_configs:
       1280x720: [20]
     audio: [64k]
     present_delay_chunk: 300
+ws_base_port: 50000
+enable_logging: false
 ```
 
 >*Remember* to replace `[path-to-the-puffer-test-channel]` with the path to the
@@ -111,8 +113,6 @@ portal_settings:
     - '*'
   debug: true
   secret_key: ')wjz$3&asr7sm3+cp@*)na__j7fu4smpo^eh8@)-p&o__l@57r'
-ws_base_port: 50000
-enable_logging: false
 ```
 
 6. Create the database:
