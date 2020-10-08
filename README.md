@@ -151,7 +151,7 @@ If you don't have access to a Linux box, you can use Docker to develop and test 
    3. Clone the repo: `git clone --recurse-submodules https://github.com/stanford-stagecast/audience`
    4. Download the test video pack: `curl -OJ https://stagecast-us-west-1.s3-us-west-1.amazonaws.com/puffer-test-channel.tar.gz`
    5. Unpack the videos : `tar xvf puffer-test-channel.tar.gz`
-   6. Fetch the development Docker image: `docker pull stanfordsnr/stagecast`
+   6. Fetch the development Docker image: `docker pull stanfordsnr/stagecast -a`
    
 3. Great! The source code is in `stagecast/audience` and you can use your favorite editor, e.g. [VS Code](https://code.visualstudio.com), for development.
 
