@@ -18,12 +18,29 @@ function ControlBar() {
   var video = document.getElementById('tv-video');
   var tv_container = document.getElementById('tv-container');
   var tv_controls = document.getElementById('tv-controls');
+  var reaction_controls = document.getElementById('reaction-controls');
 
   var volume_bar = document.getElementById('volume-bar');
   var mute_button = document.getElementById('mute-button');
   var unmute_here = document.getElementById('unmute-here');
   const volume_on_img = 'url(/static/dist/images/volume-on.svg)';
   const volume_off_img = 'url(/static/dist/images/volume-off.svg)';
+
+  // set callbacks for reaction button press
+  function reaction_button_clicked(button_idx,button_inner_text) {
+    // button index is simply the position of button in list
+    console.log("Button pressed!");
+    console.log("button_idx:",button_idx);
+    console.log("button_inner_text:",button_inner_text);
+    console.log("Button press: video.currentTime:",video.currentTime);
+  };
+  // now we assign these to the buttons
+  var button_list = reaction_controls.children[0].children;
+  var button_idx = 0;
+  for (var i = 0; i < button_list.length; i++) {
+    button_list[i].children[0].button_idx = i;
+    button_list[i].children[0].onclick = function() {reaction_button_clicked(this.button_idx,this.innerText)};
+  }
 
   /* video is muted by default */
   video.volume = 0;
@@ -73,11 +90,13 @@ function ControlBar() {
 
   function show_control_bar() {
     tv_controls.style.opacity = '0.5';
+    reaction_controls.style.opacity = '1.0';
     tv_container.style.cursor = 'default';
   }
 
   function hide_control_bar() {
     tv_controls.style.opacity = '0';
+    reaction_controls.style.opacity = '0';
     tv_container.style.cursor = 'none';
   }
 
@@ -100,6 +119,7 @@ function ControlBar() {
 
   tv_container.onmouseleave = function() {
     tv_controls.style.opacity = '0';
+    reaction_controls.style.opacity = '0';
   };
 
   /* full screen behavior */
