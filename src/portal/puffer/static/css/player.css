@@ -49,23 +49,31 @@
 
 #reaction-controls {
   position: absolute;
-  bottom: 50px;
-  left: 5px;
+  bottom: 60px;
+  right: 10px;
 }
 
 .reaction-btn {
   outline: none;
-  background-color: white;
   border: 0;
   cursor: pointer;
+  background: none;
+  font-size:50px;
+  border-radius:20px;
 }
 
 .reaction-btn:hover {
   background-color: black;
+  font-size: 100px;
 }
 
 .reaction-btn:active {
-  background-color: green;
+  background-color: blue;
+}
+
+.reaction-btn:focus {
+  outline : 0;
+  border : 0;
 }
 
 #mute-button {
