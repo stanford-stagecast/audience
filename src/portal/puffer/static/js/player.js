@@ -33,6 +33,15 @@ function ControlBar() {
     console.log("button_idx:",button_idx);
     console.log("button_inner_text:",button_inner_text);
     console.log("Button press: video.currentTime:",video.currentTime);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/feedback/');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', csrf_token);
+    xhr.send(JSON.stringify({
+      'timestamp': video.currentTime,
+      'feedback': button_inner_text,
+    }));
   };
   // now we assign these to the buttons
   var button_list = reaction_controls.children[0].children;
