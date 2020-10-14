@@ -1,7 +1,7 @@
 import os
 import json
 import random
-from datetime import datetime
+from datetime import date
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -13,9 +13,12 @@ from django.http import HttpResponse
 from accounts.models import InvitationToken
 from accounts.utils import random_token
 
+from .models import *
+
 
 def index(request):
     return render(request, 'puffer/index.html')
+
 
 @login_required(login_url='/accounts/login/')
 def player(request):
@@ -37,3 +40,28 @@ def player(request):
     context = {'params_json': json.dumps(params)}
 
     return render(request, 'puffer/player.html', context)
+
+
+@login_required(login_url='/accounts/login/')
+def audience_feedback(request):
+    try:
+        user = request.user
+        body = json.loads(request.body)
+        timestamp = body["timestamp"]
+        feedback = body["feedback"]
+        if user is None or timestamp is None or feedback is None:
+            raise Exception("Bad request")
+    except Exception as e:
+        print(e)
+        return HttpResponse("Invalid or malformed parameters", status=400)
+
+    try:
+        feedback_model = AudienceFeedback(
+            user=user, timestamp=timestamp, feedback=feedback
+        )
+        feedback_model.save()
+        return HttpResponse(status=204) # No Content
+    except Exception as e:
+        print(e)
+        pass
+    return HttpResponse("Could not create feedback model", status=500) # Internal Server Error

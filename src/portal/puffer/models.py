@@ -1,3 +1,6 @@
+from datetime import datetime
+import uuid
+
 from django.db import models
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
@@ -46,3 +49,9 @@ def user_logged_in_handler(sender, request, user, **kwargs):
 
 
 user_logged_in.connect(user_logged_in_handler)
+
+
+class AudienceFeedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.FloatField(default=0, blank=True)
+    feedback = models.TextField(default='', blank=True)

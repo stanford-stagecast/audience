@@ -9,4 +9,5 @@ urlpatterns = [
          url=staticfiles_storage.url('dist/images/favicon.ico')),
          name='favicon'),
     path('player/', views.player, name='player'),
+    path('feedback/', views.audience_feedback, name='feedback'),
 ]
