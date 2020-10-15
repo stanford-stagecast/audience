@@ -41,6 +41,15 @@ function ControlBar() {
       reactionIdx: button_idx
     };
     ws_client.send_client_reaction(reaction_msg);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/feedback/');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', csrf_token);
+    xhr.send(JSON.stringify({
+      'timestamp': video.currentTime,
+      'feedback': button_inner_text,
+    }));
   };
 
   // now we assign these to the buttons
