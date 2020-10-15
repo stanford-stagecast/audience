@@ -567,6 +567,22 @@ function WebSocketClient(session_key, username_in, settings_debug, port_in,
     }
   };
 
+  this.send_client_reaction = function(reaction_msg) {
+    if (fatal_error || channel_error) {
+      return;
+    }
+
+    if (!(ws && ws.readyState === WS_OPEN)) {
+      return;
+    }
+
+    ws.send(format_client_msg('client-reaction', reaction_msg));
+
+    if (debug) {
+      console.log('sent client-reaction', reaction_msg);
+    }
+  };
+
   /* handle a WebSocket message from the server */
   function handle_ws_msg(e) {
     if (fatal_error) {

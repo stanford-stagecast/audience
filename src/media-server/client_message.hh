@@ -111,6 +111,15 @@ public:
   AudioFormat audio_format;
 };
 
+class ClientReactionMsg : public ClientMsg
+{
+public:
+  double timeStamp {};
+  unsigned int reactionIdx {};
+  std::string reactionText {};
+  ClientReactionMsg(const json & msg);
+};
+
 class ClientMsgParser
 {
 public:
@@ -119,7 +128,8 @@ public:
     Init,
     Info,  /* rebuffer, play, or timer */
     VideoAck,
-    AudioAck
+    AudioAck,
+    Reaction
   };
 
   ClientMsgParser(const std::string & data);
@@ -128,6 +138,7 @@ public:
   ClientInfoMsg parse_client_info();
   ClientVidAckMsg parse_client_vidack();
   ClientAudAckMsg parse_client_audack();
+  ClientReactionMsg parse_client_reaction();
 
   Type msg_type() const { return type_; }
 

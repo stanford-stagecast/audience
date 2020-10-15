@@ -625,6 +625,17 @@ void handle_client_audio_ack(WebSocketClient & client,
   client.set_client_next_ats(msg.timestamp + client.channel()->aduration());
 }
 
+void handle_client_reaction(WebSocketClient & client,
+                             const ClientReactionMsg & msg)
+{
+  // Just print on cerr for now
+  std::cerr << "[Reaction] Client reaction received!\n";
+  std::cerr << "[Reaction] Client username: " << client.username() << "\n";
+  std::cerr << "[Reaction] timeStamp: " << msg.timeStamp << "\n";
+  std::cerr << "[Reaction] reactionIdx: " << msg.reactionIdx  << "\n";
+  std::cerr << "[Reaction] reactionText: " << msg.reactionText << "\n";
+}
+
 void create_channels(Inotify & inotify)
 {
   fs::path media_dir = config["media_dir"].as<string>();
@@ -749,6 +760,9 @@ int run_websocket_server()
             break;
           case ClientMsgParser::Type::AudioAck:
             handle_client_audio_ack(client, msg_parser.parse_client_audack());
+            break;
+          case ClientMsgParser::Type::Reaction:
+            handle_client_reaction(client, msg_parser.parse_client_reaction());
             break;
           default:
             throw runtime_error("invalid client message");

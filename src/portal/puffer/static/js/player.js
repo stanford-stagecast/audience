@@ -5,6 +5,8 @@ const UP_ARROW = 38;
 const RIGHT_ARROW = 39;
 const DOWN_ARROW = 40;
 
+var ws_client;
+
 function load_script(script_path) {
   /* Create and append a new script */
   var new_script = document.createElement('script');
@@ -33,7 +35,14 @@ function ControlBar() {
     console.log("button_idx:",button_idx);
     console.log("button_inner_text:",button_inner_text);
     console.log("Button press: video.currentTime:",video.currentTime);
+    var reaction_msg = {
+      timeStamp: video.currentTime, 
+      reactionText: button_inner_text,
+      reactionIdx: button_idx
+    };
+    ws_client.send_client_reaction(reaction_msg);
   };
+
   // now we assign these to the buttons
   var button_list = reaction_controls.children[0].children;
   var button_idx = 0;
@@ -468,7 +477,7 @@ function init_player(params_json, csrf_token) {
   };
 
   load_script('/static/js/puffer.js').onload = function() {
-    var ws_client = new WebSocketClient(
+    ws_client = new WebSocketClient(
       session_key, username, settings_debug, port, csrf_token, sysinfo);
 
     channel_bar.on_channel_change = function(new_channel) {

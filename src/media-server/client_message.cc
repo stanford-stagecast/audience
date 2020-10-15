@@ -86,6 +86,13 @@ ClientAudAckMsg::ClientAudAckMsg(const json & msg)
   : ClientAckMsg(msg), audio_format(format)
 {}
 
+ClientReactionMsg::ClientReactionMsg(const json & msg)
+{
+  timeStamp = msg.at("timeStamp").get<float>();
+  reactionIdx = msg.at("reactionIdx").get<unsigned int>();
+  reactionText = msg.at("reactionText").get<string>();
+}
+
 ClientMsgParser::ClientMsgParser(const string & data)
   : msg_(json::parse(data))
 {
@@ -99,6 +106,8 @@ ClientMsgParser::ClientMsgParser(const string & data)
     type_ = Type::VideoAck;
   } else if (type_str == "client-audack") {
     type_ = Type::AudioAck;
+  } else if (type_str == "client-reaction") {
+    type_ = Type::Reaction;
   } else {
     throw runtime_error("Invalid client message type");
   }
@@ -122,4 +131,9 @@ ClientVidAckMsg ClientMsgParser::parse_client_vidack()
 ClientAudAckMsg ClientMsgParser::parse_client_audack()
 {
   return ClientAudAckMsg(msg_);
+}
+
+ClientReactionMsg ClientMsgParser::parse_client_reaction()
+{
+  return ClientReactionMsg(msg_);
 }
