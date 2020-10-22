@@ -48,6 +48,7 @@
               <input type="range" id="volume-bar" min="0" max="1" step="0.05" value="0">
               <button type="button" id="full-screen-button"></button>
             </div>
+            <div id="audio-recording-indicator">⏺ Detected audio event. Recording ...</div>
             <div id="reaction-controls">
               <div class="col text-center">
                 <div class="row-sm-auto">
@@ -94,6 +95,7 @@
 
   <script src="{% static 'dist/js/jquery-3.3.1.slim.min.js' %}"></script>
   <script src="{% static 'dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'dist/js/hark.bundle.js' %}"></script>
 
   <script src="{% static 'js/player.js' %}"></script>
   

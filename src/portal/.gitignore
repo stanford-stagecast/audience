@@ -119,4 +119,5 @@ tests/.coverage
 build/
 tests/report/
 puffer/static/admin/
+media/
 ^dist

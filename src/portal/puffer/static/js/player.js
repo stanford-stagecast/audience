@@ -453,6 +453,118 @@ function get_screen_size() {
   return [screen_width, screen_height];
 }
 
+function init_recording() {
+  // we use hark library from 
+  // https://github.com/otalk/hark
+
+  navigator.mediaDevices.getUserMedia({audio: true, video: false})
+  .then(
+  (stream) => {
+      var audioRecordingIndicator = document.getElementById('audio-recording-indicator');
+      var video = document.getElementById('tv-video');
+      audioRecordingIndicator.style.display = 'none';
+      console.log("success getting mic set up.");
+
+      // set up audio recording
+      // code inspired by tutorial at 
+      // https://medium.com/jeremy-gottfrieds-tech-blog/javascript-tutorial-record-audio-and-encode-it-to-mp3-2eedcd466e78
+      // and at https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Using_the_MediaStream_Recording_API
+      let rec = new MediaRecorder(stream, {mimeType: 'audio/webm; codec=opus'});
+      let audioChunks = [];
+      rec.ondataavailable = e => {
+        audioChunks.push(e.data);
+        if (rec.state == "inactive"){
+          // this happens after rec.stop is called
+          // this section of audio is finished so upload to server
+          // first convert to blob
+          let blob = new Blob(audioChunks, { 'type' : 'audio/webm; codecs=opus' });
+
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '/audiofeedback/');
+          xhr.setRequestHeader('X-CSRFToken', csrf_token);
+          var formData = new FormData();
+          formData.append("timestamp", recordingStartTimestamp);
+          formData.append("audio_file", blob, "audio_"+recordingStartTimestamp+".webm");
+          // third parameter above is the file name
+          xhr.send(formData);
+      
+          /*
+          // Test code below from https://developers.google.com/web/updates/2016/01/mediarecorder
+          // This downloads each audio file to the client
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          document.body.appendChild(a);
+          a.style = 'display: none';
+          a.href = url;
+          a.download = 'test.webm';
+          a.click();
+          window.URL.revokeObjectURL(url);
+          */
+        }
+      };
+
+
+      var options = {}; // can set detection threshold and polling interval here
+      var speechEvents = hark(stream, options);
+      speechEvents.setInterval(10); // ms
+      // set to small so we don't miss short claps
+      // Note that can lead to fragmentation, so we have timeToWaitBeforeStoppingRecord below
+      var lastDetectedStoppedSpeakingTimeStamp = 0;
+      const timeToWaitBeforeStoppingRecord = 1000; // ms
+      // this variable specifies the minimum length of silence needed to stop recording
+      var currentlySpeaking = false;
+      var alreadyCalledStopRecording = false; // to avoid multiple calls 
+      /* timeToWaitBeforeStoppingRecord:
+          Don't stop recording immediately after we get stopped_speaking,
+          rather stop after stopped_speaking only when the time till the last 
+          speaking event exceeds timeToWaitBeforeStoppingRecord
+      */
+      var recordingStartTimestamp; // video timestamp at start of recording
+
+      speechEvents.on('speaking', function () {
+        console.log('detected speaking');
+        currentlySpeaking = true;
+        if (rec.state === 'recording') {
+          // do nothing (this happens in case there are rapid start/stop events)
+        } else {
+          audioRecordingIndicator.style.display = 'block';
+          audioChunks = [];
+          recordingStartTimestamp = video.currentTime;
+          rec.start();
+        }
+      });
+
+      function stopRecording() {
+        if (!currentlySpeaking && 
+          Date.now()-lastDetectedStoppedSpeakingTimeStamp > timeToWaitBeforeStoppingRecord) {
+          // if no speaking event currently
+          // and if there has been sufficient time since the last stopped_speaking event
+          audioRecordingIndicator.style.display = 'none';
+          rec.stop();
+          alreadyCalledStopRecording = false;
+        } else {
+          // otherwise try again 
+          setTimeout(stopRecording,timeToWaitBeforeStoppingRecord);
+        }
+      };
+
+      speechEvents.on('stopped_speaking', function () {
+        console.log('detected stopped_speaking');
+        currentlySpeaking = false;
+        lastDetectedStoppedSpeakingTimeStamp = Date.now();
+        if (rec.state === 'inactive' || alreadyCalledStopRecording) {
+          // do nothing (this happens in case there are rapid start/stop events)
+        } else {
+          stopRecording(); // which will take care of having sufficient duration before actually stopping
+          alreadyCalledStopRecording = true;
+        }
+      });
+  }).catch(
+    (err) => {
+      throw err;
+    });
+}
+
 function init_player(params_json, csrf_token) {
   const params = JSON.parse(params_json);
 
@@ -484,6 +596,9 @@ function init_player(params_json, csrf_token) {
     control_bar.onkeydown(e);
     channel_bar.onkeydown(e);
   };
+
+  // initiate user audio recording
+  init_recording();
 
   load_script('/static/js/puffer.js').onload = function() {
     ws_client = new WebSocketClient(

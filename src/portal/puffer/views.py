@@ -65,3 +65,25 @@ def audience_feedback(request):
         print(e)
         pass
     return HttpResponse("Could not create feedback model", status=500) # Internal Server Error
+
+@login_required(login_url='/accounts/login/')
+def audio_feedback(request):
+    try:
+        user = request.user
+        timestamp = request.POST['timestamp']
+        if user is None or timestamp is None:
+            raise Exception("Bad request")
+    except Exception as e:
+        print(e)
+        return HttpResponse("Invalid or malformed parameters", status=400)
+
+    try:
+        audio_feedback_model = AudioFeedback(
+            user=user, audio_file=request.FILES['audio_file'], timestamp = timestamp
+        )
+        audio_feedback_model.save()
+        return HttpResponse(status=204) # No Content
+    except Exception as e:
+        print(e)
+        pass
+    return HttpResponse("Could not create audio feedback model", status=500) # Internal Server Error

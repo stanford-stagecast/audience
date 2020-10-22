@@ -76,6 +76,15 @@
   border : 0;
 }
 
+#audio-recording-indicator {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  color: red;
+  font-size: 20px;
+}
+
 #mute-button {
   background-size: 25px;
   width: 25px;

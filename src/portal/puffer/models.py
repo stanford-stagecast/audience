@@ -55,3 +55,12 @@ class AudienceFeedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.FloatField(default=0, blank=True)
     feedback = models.TextField(default='', blank=True)
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/username/<filename>
+    return '{0}/{1}'.format(instance.user.username, filename)
+
+class AudioFeedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    audio_file = models.FileField(upload_to=user_directory_path)
+    timestamp = models.FloatField(default=0, blank=True)
