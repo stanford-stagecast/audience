@@ -5,6 +5,7 @@ from datetime import date
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
@@ -66,6 +67,7 @@ def audience_feedback(request):
         pass
     return HttpResponse("Could not create feedback model", status=500) # Internal Server Error
 
+
 @login_required(login_url='/accounts/login/')
 def audio_feedback(request):
     try:
@@ -87,3 +89,29 @@ def audio_feedback(request):
         print(e)
         pass
     return HttpResponse("Could not create audio feedback model", status=500) # Internal Server Error
+
+
+@login_required(login_url='/accounts/login/')
+def get_chat(request):
+    try:
+        user = request.user
+        body = json.loads(request.body)
+        time_from = body["from"]
+        time_to = body["to"]
+        if user is None or time_from is None:
+            raise Exception("Bad request")
+    except Exception as e:
+        print(e)
+        return HttpResponse("Invalid or malformed parameters", status=400)
+
+    try:
+        chats = list(AudienceFeedback.objects.filter(
+            timestamp__gte=time_from, timestamp__lte=time_to
+        ).values())
+        for chat in chats:
+            chat["username"] = User.objects.get(pk=chat["user_id"]).username
+        return HttpResponse(json.dumps(chats), status=200) # No Content
+    except Exception as e:
+        print(e)
+        pass
+    return HttpResponse("Could not fetch chats", status=500) # Internal Server Error
