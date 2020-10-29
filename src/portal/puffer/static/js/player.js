@@ -5,6 +5,8 @@ const UP_ARROW = 38;
 const RIGHT_ARROW = 39;
 const DOWN_ARROW = 40;
 
+var chatFromTime = 0;
+
 var ws_client;
 
 function load_script(script_path) {
@@ -59,6 +61,71 @@ function ControlBar() {
     button_list[i].children[0].button_idx = i;
     button_list[i].children[0].onclick = function() {reaction_button_clicked(this.button_idx,this.innerText)};
   }
+
+  function sendChat(input) {
+    console.log("Sending chat message: ", input.value);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/feedback/');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', csrf_token);
+    xhr.send(JSON.stringify({
+      'timestamp': video.currentTime,
+      'feedback': input.value,
+    }));
+    input.value = "";
+  };
+
+  var chatBox = document.getElementById('chatbox');
+  setTimeout(() => {
+    chatBox.style.height = `${video.getBoundingClientRect().height}px`;
+    chatBox.style.maxHeight = `${video.getBoundingClientRect().height}px`;
+  }, 500);
+
+  var chatInput = document.getElementById('chatbox-entry-input');
+  var chatSend = document.getElementById('chatbox-entry-send');
+  chatSend.onclick = () => {if (chatInput.value) sendChat(chatInput)};
+
+  var from = 0;
+  function getChats(from, to) {
+    if (to <= from) {
+      return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      chatFromTime = to;
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        var shouldScroll = chatReplay.scrollTop + chatReplay.offsetHeight > chatReplay.scrollHeight - 10;
+
+        var chatList = JSON.parse(xhr.responseText);
+        chatList = chatList.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1);
+        var chatHTML = "";
+        chatList.forEach((chat) => {
+          chatHTML += `<li>
+            <span class="chat-replay-username">${chat.username}</span>
+            <span class="chat-replay-text">${chat.feedback}</span>
+          </li>`;
+        });
+        chatReplayList.innerHTML += chatHTML;
+
+        console.log(shouldScroll, chatReplay.scrollTop + chatReplay.offsetHeight, chatReplay.scrollHeight);
+        if (shouldScroll) {
+          chatReplay.scrollTop = chatReplay.scrollHeight;
+        }
+      }
+    }
+    xhr.open('POST', '/get_chat/');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', csrf_token);
+    xhr.send(JSON.stringify({
+      'from': from, 'to': to,
+    }));
+  }
+  var chatReplay = document.getElementById('chatbox-replay');
+  var chatReplayList = document.getElementById('chatbox-replay-list');
+  setInterval(() => {
+    getChats(chatFromTime, video.currentTime);
+  }, 500);
 
   /* video is muted by default */
   video.volume = 0;

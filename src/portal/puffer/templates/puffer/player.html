@@ -7,8 +7,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="{% static 'dist/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css">
   <link rel="stylesheet" href="{% static 'css/common.css' %}">
   <link rel="stylesheet" href="{% static 'css/player.css' %}">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <title>StageCast</title>
 </head>
 
@@ -34,10 +36,14 @@
     </ul>
     {% endif %}
 
-    <div class="row">
-      <div class="col-md-12 mt-3">
+    <div class="row mt-3">
+      <div class="col-md-12">
         <ul class="list-unstyled" id="player-error-list"></ul>
+      </div>
+    </div>
 
+    <div class="row">
+      <div class="col-md-8 mt-3">
         <div class="embed-responsive embed-responsive-16by9">
           <div id="tv-container">
             <video id="tv-video" muted></video>
@@ -68,6 +74,18 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mt-3">
+        <div id="chatbox">
+          <div id="chatbox-title">Chat</div>
+          <div id="chatbox-replay"><ul id="chatbox-replay-list"></ul></div>
+          <div id="chatbox-entry">
+            <input id="chatbox-entry-input" class="input-sm input-with-post-icon" type="text" name="chat" placeholder="Say something...">
+              <span id="chatbox-entry-send" class="material-icons input-prefix">
+                send
+              </span>
           </div>
         </div>
       </div>
