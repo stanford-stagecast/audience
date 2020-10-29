@@ -43,7 +43,7 @@
   bottom: 5px;
   left: 5px;
   right: 5px;
-  border-radius:5px;
+  border-radius: 5px;
   background-color: white;
 }
 
@@ -58,13 +58,40 @@
   border: 0;
   cursor: pointer;
   background: none;
-  font-size:50px;
-  border-radius:20px;
+  font-size: 35px;
+  border-radius: 10px;
 }
 
 .reaction-btn:hover {
-  background-color: black;
-  font-size: 100px;
+  background-color: #d1ecf1;
+  font-size: 45px;
+}
+
+@media only screen and (max-width: 414px) {
+  .reaction-btn {
+    font-size: 12px;
+  }
+  .reaction-btn:hover {
+    font-size: 12px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .reaction-btn {
+    font-size: 14px;
+  }
+  .reaction-btn:hover {
+    font-size: 20px;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .reaction-btn {
+    font-size: 24px;
+  }
+  .reaction-btn:hover {
+    font-size: 30px;
+  }
 }
 
 .reaction-btn:active {
@@ -246,6 +273,7 @@
   align-items: center;
   padding: 15px;
   color: black;
+  overflow: hidden;
 }
 
 #chatbox-replay {
@@ -284,6 +312,7 @@
   border-radius: 10px;
   padding: 15px;
   padding-top: 12px;
+  overflow: scroll;
 
   display: flex;
   justify-content: space-between;
