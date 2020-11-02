@@ -83,6 +83,7 @@
   background: none;
   color: red;
   font-size: 20px;
+  display: none;
 }
 
 #mute-button {
@@ -155,6 +156,25 @@
 #full-screen-button:hover {
   opacity: 1;
 }
+
+#mute-audio-button {
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 25px;
+  height: 25px;
+  border: 0;
+  outline: none;
+  background-color: white;
+  position: absolute;
+  right: 30px;
+  top: 5px;
+  cursor:pointer;
+}
+
+#mute-audio-button:hover {
+  opacity: 1;
+}
+
 
 #unmute-here {
   cursor: pointer;

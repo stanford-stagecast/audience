@@ -460,6 +460,25 @@ function init_recording() {
   navigator.mediaDevices.getUserMedia({audio: true, video: false})
   .then(
   (stream) => {
+      /* mute audio behavior */
+      const unmuted_mic_img = 'url(/static/dist/images/mic_unmuted.svg)';
+      const muted_mic_img = 'url(/static/dist/images/mic_muted.svg)';
+
+      var mute_audio_button = document.getElementById('mute-audio-button');
+      mute_audio_button.style.backgroundImage = unmuted_mic_img;
+      mute_audio_button.muted = false;
+      mute_audio_button.onclick = function() {
+        if (mute_audio_button.muted) {
+          mute_audio_button.muted = false;
+          stream.getAudioTracks()[0].enabled = true;
+          mute_audio_button.style.backgroundImage = unmuted_mic_img;
+        } else {
+          mute_audio_button.muted = true;
+          stream.getAudioTracks()[0].enabled = false;
+          mute_audio_button.style.backgroundImage = muted_mic_img;
+        }
+      };    
+
       var audioRecordingIndicator = document.getElementById('audio-recording-indicator');
       var video = document.getElementById('tv-video');
       audioRecordingIndicator.style.display = 'none';
@@ -470,37 +489,39 @@ function init_recording() {
       // https://medium.com/jeremy-gottfrieds-tech-blog/javascript-tutorial-record-audio-and-encode-it-to-mp3-2eedcd466e78
       // and at https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Using_the_MediaStream_Recording_API
       let rec = new MediaRecorder(stream, {mimeType: 'audio/webm; codec=opus'});
-      let audioChunks = [];
+      let chunkNum = 0; // chunk number for current recording
+      // we send smaller chunks to server rather than waiting for entire
+      // recording, since in some cases the recorder might be on for long times
+      // leading to very large files sent to server.
+      // Note that we need to concatenate the files at the server to allow playback.
       rec.ondataavailable = e => {
-        audioChunks.push(e.data);
-        if (rec.state == "inactive"){
-          // this happens after rec.stop is called
-          // this section of audio is finished so upload to server
-          // first convert to blob
-          let blob = new Blob(audioChunks, { 'type' : 'audio/webm; codecs=opus' });
+        // this happens after rec.stop is called
+        // this section of audio is finished so upload to server
+        // first convert to blob
+        let blob = new Blob([e.data], { 'type' : 'audio/webm; codecs=opus' });
 
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', '/audiofeedback/');
-          xhr.setRequestHeader('X-CSRFToken', csrf_token);
-          var formData = new FormData();
-          formData.append("timestamp", recordingStartTimestamp);
-          formData.append("audio_file", blob, "audio_"+recordingStartTimestamp+".webm");
-          // third parameter above is the file name
-          xhr.send(formData);
-      
-          /*
-          // Test code below from https://developers.google.com/web/updates/2016/01/mediarecorder
-          // This downloads each audio file to the client
-          var url = URL.createObjectURL(blob);
-          var a = document.createElement('a');
-          document.body.appendChild(a);
-          a.style = 'display: none';
-          a.href = url;
-          a.download = 'test.webm';
-          a.click();
-          window.URL.revokeObjectURL(url);
-          */
-        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/audiofeedback/');
+        xhr.setRequestHeader('X-CSRFToken', csrf_token);
+        var formData = new FormData();
+        formData.append("timestamp", recordingStartTimestamp);
+        formData.append("audio_file", blob, "audio_"+recordingStartTimestamp+"_"+chunkNum+".webm");
+        chunkNum += 1;
+        // third parameter above is the file name
+        xhr.send(formData);
+    
+        /*
+        // Test code below from https://developers.google.com/web/updates/2016/01/mediarecorder
+        // This downloads each audio file to the client
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        document.body.appendChild(a);
+        a.style = 'display: none';
+        a.href = url;
+        a.download = 'test.webm';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        */
       };
 
 
@@ -528,9 +549,10 @@ function init_recording() {
           // do nothing (this happens in case there are rapid start/stop events)
         } else {
           audioRecordingIndicator.style.display = 'block';
-          audioChunks = [];
+          chunkNum = 0;
           recordingStartTimestamp = video.currentTime;
-          rec.start();
+          rec.start(60000); // record in 60 s chunks so we send small files to server
+                            // Chunks need to be concatenated at server for playback
         }
       });
 
@@ -561,7 +583,8 @@ function init_recording() {
       });
   }).catch(
     (err) => {
-      throw err;
+      console.log(err);
+      console.log("disabled audio feedback.");
     });
 }
 
