@@ -50,6 +50,38 @@ function clearHeartAnimation() {
   }
 }
 
+var lastTimeEmojiAnimationCalled;
+function showEmojiAnimation(emoji) {
+  lastTimeEmojiAnimationCalled = Date.now();
+  // code from https://codepen.io/vivinantony/pen/gbENBB
+  for (var i = 0; i < 3; i++) { // loop to show 3x2 = 6 hearts 
+    var r_num = Math.floor(Math.random() * 40) + 1;
+    var r_size = Math.floor(Math.random() * 65) + 20;
+    var r_left = Math.floor(Math.random() * 100) + 1;
+    var r_time = Math.floor(Math.random() * 5) + 5;
+
+    $('.bg_emoji').append("<div class='emoji_animation' style='width:" + r_size + "px;height:" + r_size + "px;font-size:" + r_size + "px;left:" + r_left + "%;-webkit-animation:love " + r_time + "s ease;-moz-animation:love " + r_time + "s ease;-ms-animation:love " + r_time + "s ease;animation:love " + r_time + "s ease'>"+emoji+"</div>");
+
+    $('.bg_emoji').append("<div class='emoji_animation' style='width:" + (r_size - 10) + "px;height:" + (r_size - 10) + "px;left:" + (r_left + r_num) + "%;-webkit-animation:love " + (r_time + 5) + "s ease;-moz-animation:love " + (r_time + 5) + "s ease;-ms-animation:love " + (r_time + 5) + "s ease;animation:love " + (r_time + 5) + "s ease'>"+emoji+"</div>");
+
+    $('.emoji_animation').each(function() {
+      var top = $(this).css("top").replace(/[^-\d\.]/g, '');
+      var width = $(this).css("width").replace(/[^-\d\.]/g, '');
+      if (top <= -100 || width >= 150) {
+          $(this).detach();
+      }
+    });
+  }
+  setTimeout(function(){clearEmojiAnimation();}, 4000); // remove element after 4000 ms
+}
+
+function clearEmojiAnimation() {
+  // called after few seconds elapse without call to showEmojiAnimation
+  // To make sure repeated clicks keep on producing the emojis until there is a lull of 4s
+  if (Date.now() - lastTimeEmojiAnimationCalled > 4000) {
+    $('.bg_emoji').empty();
+  }
+}
 
 //The animation for firework
 // code from https://codepen.io/judag/pen/XmXMOL
@@ -72,7 +104,7 @@ function showFireWorkAnimation() {
 
     //define helper functions
     function onLoad() {
-        canvas = document.getElementById("canvas");
+        canvas = document.getElementById("firework-canvas");
         ctx = canvas.getContext("2d");
         resizeCanvas();           
         window.requestAnimationFrame(updateWorld);
@@ -201,12 +233,15 @@ function ControlBar() {
   var num_clicked = 0;
   // set callbacks for reaction button press
   function reaction_button_clicked(button_idx,button_inner_text) {
-  	if(num_clicked<2){
+    if(num_clicked == 0){
   	    //play the heart animation after a button is clicked
         showHeartAnimation();  
         num_clicked += 1;		
-  	}
-    else{
+    } else if (num_clicked == 1) {
+        //play the emoji animation after a button is clicked
+        showEmojiAnimation(button_inner_text);  
+        num_clicked += 1;		
+    }else {
     	//play the firework animation after a button is clicked
         showFireWorkAnimation();
         num_clicked = 0;
