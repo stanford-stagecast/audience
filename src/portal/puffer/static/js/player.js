@@ -585,6 +585,8 @@ function init_recording() {
     (err) => {
       console.log(err);
       console.log("disabled audio feedback.");
+      var mute_audio_button = document.getElementById('mute-audio-button');
+      mute_audio_button.style.display = "none";
     });
 }
 
