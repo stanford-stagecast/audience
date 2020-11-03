@@ -18,7 +18,210 @@ function load_script(script_path) {
   return new_script;
 }
 
+var lastTimeHeartAnimationCalled;
+function showHeartAnimation() {
+  lastTimeHeartAnimationCalled = Date.now();
+  // code from https://codepen.io/vivinantony/pen/gbENBB
+  for (var i = 0; i < 3; i++) { // loop to show 3x2 = 6 hearts 
+    var r_num = Math.floor(Math.random() * 40) + 1;
+    var r_size = Math.floor(Math.random() * 65) + 10;
+    var r_left = Math.floor(Math.random() * 100) + 1;
+    var r_bg = Math.floor(Math.random() * 25) + 100;
+    var r_time = Math.floor(Math.random() * 5) + 5;
+
+    $('.bg_heart').append("<div class='heart' style='width:" + r_size + "px;height:" + r_size + "px;left:" + r_left + "%;background:rgba(255," + (r_bg - 25) + "," + r_bg + ",1);-webkit-animation:love " + r_time + "s ease;-moz-animation:love " + r_time + "s ease;-ms-animation:love " + r_time + "s ease;animation:love " + r_time + "s ease'></div>");
+
+    $('.bg_heart').append("<div class='heart' style='width:" + (r_size - 10) + "px;height:" + (r_size - 10) + "px;left:" + (r_left + r_num) + "%;background:rgba(255," + (r_bg - 25) + "," + (r_bg + 25) + ",1);-webkit-animation:love " + (r_time + 5) + "s ease;-moz-animation:love " + (r_time + 5) + "s ease;-ms-animation:love " + (r_time + 5) + "s ease;animation:love " + (r_time + 5) + "s ease'></div>");
+
+    $('.heart').each(function() {
+      var top = $(this).css("top").replace(/[^-\d\.]/g, '');
+      var width = $(this).css("width").replace(/[^-\d\.]/g, '');
+      if (top <= -100 || width >= 150) {
+          $(this).detach();
+      }
+    });
+  }
+  setTimeout(function(){clearHeartAnimation();}, 4000); // remove element after 4000 ms
+}
+
+function clearHeartAnimation() {
+  // called after few seconds elapse without call to showHeartAnimation
+  // To make sure repeated clicks keep on producing the hearts until there is a lull of 4s
+  if (Date.now() - lastTimeHeartAnimationCalled > 4000) {
+    $('.bg_heart').empty();
+  }
+}
+
+var lastTimeEmojiAnimationCalled;
+function showEmojiAnimation(emoji) {
+  lastTimeEmojiAnimationCalled = Date.now();
+  // code from https://codepen.io/vivinantony/pen/gbENBB
+  for (var i = 0; i < 3; i++) { // loop to show 3x2 = 6 hearts 
+    var r_num = Math.floor(Math.random() * 40) + 1;
+    var r_size = Math.floor(Math.random() * 65) + 20;
+    var r_left = Math.floor(Math.random() * 100) + 1;
+    var r_time = Math.floor(Math.random() * 5) + 5;
+
+    $('.bg_emoji').append("<div class='emoji_animation' style='width:" + r_size + "px;height:" + r_size + "px;font-size:" + r_size + "px;left:" + r_left + "%;-webkit-animation:love " + r_time + "s ease;-moz-animation:love " + r_time + "s ease;-ms-animation:love " + r_time + "s ease;animation:love " + r_time + "s ease'>"+emoji+"</div>");
+
+    $('.bg_emoji').append("<div class='emoji_animation' style='width:" + (r_size - 10) + "px;height:" + (r_size - 10) + "px;left:" + (r_left + r_num) + "%;-webkit-animation:love " + (r_time + 5) + "s ease;-moz-animation:love " + (r_time + 5) + "s ease;-ms-animation:love " + (r_time + 5) + "s ease;animation:love " + (r_time + 5) + "s ease'>"+emoji+"</div>");
+
+    $('.emoji_animation').each(function() {
+      var top = $(this).css("top").replace(/[^-\d\.]/g, '');
+      var width = $(this).css("width").replace(/[^-\d\.]/g, '');
+      if (top <= -100 || width >= 150) {
+          $(this).detach();
+      }
+    });
+  }
+  setTimeout(function(){clearEmojiAnimation();}, 4000); // remove element after 4000 ms
+}
+
+function clearEmojiAnimation() {
+  // called after few seconds elapse without call to showEmojiAnimation
+  // To make sure repeated clicks keep on producing the emojis until there is a lull of 4s
+  if (Date.now() - lastTimeEmojiAnimationCalled > 4000) {
+    $('.bg_emoji').empty();
+  }
+}
+
+//The animation for firework
+// code from https://codepen.io/judag/pen/XmXMOL
+var lastTimeFireworkAnimationCalled;
+function showFireWorkAnimation() {
+	//record the time once the firework starts
+	lastTimeFireworkAnimationCalled = Date.now();
+  	window.requestAnimationFrame = 
+            window.requestAnimationFrame       || 
+            window.webkitRequestAnimationFrame || 
+            window.mozRequestAnimationFrame    || 
+            window.oRequestAnimationFrame      || 
+            window.msRequestAnimationFrame     ||
+            function (callback) {
+                window.setTimeout(callback, 1000/60);
+            };  
+    var canvas, ctx, w, h, particles = [], probability = 0.04, xPoint, yPoint;
+    //start drawing the fireworks
+    onLoad();
+
+    //define helper functions
+    function onLoad() {
+        canvas = document.getElementById("firework-canvas");
+        ctx = canvas.getContext("2d");
+        resizeCanvas();           
+        window.requestAnimationFrame(updateWorld);
+    } 
+        
+    function resizeCanvas() {
+        if (!!canvas) {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+    } 
+        
+    function updateWorld() {
+    	//only play the firework animation for 4 seconds
+    	if (Date.now() - lastTimeFireworkAnimationCalled < 4000){
+            update();
+            paint();
+            window.requestAnimationFrame(updateWorld);   		
+    	}
+    	else{
+    		//clear the canvas after it plays for 3 seconds
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    	}
+
+    } 
+        
+    function update() {
+        if (particles.length < 500 && Math.random() < probability) {
+            createFirework();
+        }
+        var alive = [];
+        for (var i=0; i<particles.length; i++) {
+            if (particles[i].move()) {
+                alive.push(particles[i]);
+            }
+        }
+        particles = alive;
+    } 
+        
+    function paint() {
+    	ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = "rgba(0,0,0,0.2)";
+        ctx.globalCompositeOperation = 'lighter';
+        for (var i=0; i<particles.length; i++) {
+            particles[i].draw(ctx);
+        }
+    } 
+        
+    function createFirework() {
+        xPoint = Math.random()*(w-200)+100;
+        yPoint = Math.random()*(h-200)+100;
+        var nFire = Math.random()*50+100;
+        var c = "rgb("+(~~(Math.random()*200+55))+","
+             +(~~(Math.random()*200+55))+","+(~~(Math.random()*200+55))+")";
+        for (var i=0; i<nFire; i++) {
+            var particle = new Particle();
+            particle.color = c;
+            var vy = Math.sqrt(25-particle.vx*particle.vx);
+            if (Math.abs(particle.vy) > vy) {
+                particle.vy = particle.vy>0 ? vy: -vy;
+            }
+            particles.push(particle);
+        }
+    } 
+        
+    function Particle() {
+        this.w = this.h = Math.random()*4+1;
+            
+        this.x = xPoint-this.w/2;
+        this.y = yPoint-this.h/2;
+            
+        this.vx = (Math.random()-0.5)*10;
+        this.vy = (Math.random()-0.5)*10;
+            
+        this.alpha = Math.random()*.5+.5;
+            
+        this.color;
+    } 
+        
+    Particle.prototype = {
+        gravity: 0.05,
+        move: function () {
+            this.x += this.vx;
+            this.vy += this.gravity;
+            this.y += this.vy;
+            this.alpha -= 0.01;
+            if (this.x <= -this.w || this.x >= screen.width ||
+                this.y >= screen.height ||
+                this.alpha <= 0) {
+                    return false;
+            }
+            return true;
+        },
+        draw: function (c) {
+            c.save();
+            c.beginPath();
+                
+            c.translate(this.x+this.w/2, this.y+this.h/2);
+            c.arc(0, 0, this.w, 0, Math.PI*2);
+            c.fillStyle = this.color;
+            c.globalAlpha = this.alpha;
+                
+            c.closePath();
+            c.fill();
+            c.restore();
+        }
+    } 
+}
+
+
+
+
 function ControlBar() {
+
   var video = document.getElementById('tv-video');
   var tv_container = document.getElementById('tv-container');
   var tv_controls = document.getElementById('tv-controls');
@@ -29,9 +232,23 @@ function ControlBar() {
   var unmute_here = document.getElementById('unmute-here');
   const volume_on_img = 'url(/static/dist/images/volume-on.svg)';
   const volume_off_img = 'url(/static/dist/images/volume-off.svg)';
-
+  var num_clicked = 0;
   // set callbacks for reaction button press
   function reaction_button_clicked(button_idx,button_inner_text) {
+    if(num_clicked == 0){
+  	    //play the heart animation after a button is clicked
+        showHeartAnimation();  
+        num_clicked += 1;		
+    } else if (num_clicked == 1) {
+        //play the emoji animation after a button is clicked
+        showEmojiAnimation(button_inner_text);  
+        num_clicked += 1;		
+    }else {
+    	//play the firework animation after a button is clicked
+        showFireWorkAnimation();
+        num_clicked = 0;
+    }
+
     // button index is simply the position of button in list
     console.log("Button pressed!");
     console.log("button_idx:",button_idx);

@@ -103,6 +103,93 @@
   border : 0;
 }
 
+/* heart animation */
+
+
+.bg_heart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none; /* to allow clicking the buttons through animation canvas */
+ }
+
+.heart {
+    position: absolute;
+    top: -50%;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -m-transform: rotate(-45deg);
+    transform: rotate(-45deg)
+ }
+
+.heart:before {
+    position: absolute;
+    top: -50%;
+    left: 0;
+    display: block;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    border-radius: 100%;
+}
+
+.heart:after {
+    position: absolute;
+    top: 0;
+    right: -50%;
+    display: block;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    border-radius: 100%;
+}
+
+@-webkit-keyframes love {
+  0%{top:110%}
+}
+@-moz-keyframes love {
+  0%{top:110%}
+}
+@-ms-keyframes love {
+  0%{top:110%}
+}
+@keyframes love {
+  0%{top:110%}
+}
+
+.bg_emoji {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none; /* to allow clicking the buttons through animation canvas */
+}
+
+.emoji_animation {
+  position: absolute;
+  background: none;
+  top: -50%;
+}
+/*firework animation*/
+
+#firework-canvas{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none; 
+}
+
+
 #audio-recording-indicator {
   position: absolute;
   top: 10px;

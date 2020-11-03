@@ -55,6 +55,10 @@
               <button type="button" id="mute-audio-button"></button>
               <button type="button" id="full-screen-button"></button>
             </div>
+            <div id="header-plugin"></div>
+            <div class="bg_heart"></div>
+            <div class="bg_emoji"></div>
+            <div><canvas id="firework-canvas"></canvas></div>
             <div id="audio-recording-indicator">⏺ Detected audio event. Recording ...</div>
             <div id="reaction-controls">
               <div class="col text-right">
@@ -92,6 +96,8 @@
       </div>
     </div>
 
+
+
     <div class="row mt-3">
       <div class="col-md-12">
         <div class="alert alert-info" role="alert" id="unmute-message">
@@ -115,7 +121,6 @@
   <script src="{% static 'dist/js/jquery-3.3.1.slim.min.js' %}"></script>
   <script src="{% static 'dist/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'dist/js/hark.bundle.js' %}"></script>
-
   <script src="{% static 'js/player.js' %}"></script>
   
   {% if params_json %}
