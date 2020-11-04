@@ -233,7 +233,7 @@ function ControlBar() {
   const volume_on_img = 'url(/static/dist/images/volume-on.svg)';
   const volume_off_img = 'url(/static/dist/images/volume-off.svg)';
   // set callbacks for reaction button press
-  function reaction_button_clicked(button_idx,button_inner_text,sentiment) {
+  function reaction_button_clicked(button_idx,button_inner_text,sentiment,audio) {
     // play the emoji animation after a button is clicked
     showEmojiAnimation(button_inner_text);
     // if sentiment is happy, play firework animation with probability 1/3
@@ -241,6 +241,16 @@ function ControlBar() {
       if (Math.random() <= 1/3) {
         showFireWorkAnimation();
       }
+    }
+
+    if (audio !== undefined) {
+      // play audio clip corresponding to emoji (using howler.js library)
+      // Sound effects from http://www.realmofdarkness.net/sb/crowd/
+      var sound = new Howl({
+        src: ['/static/dist/audio/'+audio],
+        volume: 0.15*volume_bar.value // multiple by factor to reduce wrt main audio
+      });
+      sound.play();
     }
 
     // button index is simply the position of button in list
@@ -267,10 +277,9 @@ function ControlBar() {
 
   // now we assign these to the buttons
   var button_list = reaction_controls.children[0].children;
-  var button_idx = 0;
   for (var i = 0; i < button_list.length; i++) {
     button_list[i].children[0].button_idx = i;
-    button_list[i].children[0].onclick = function() {reaction_button_clicked(this.button_idx,this.innerText,this.dataset.sentiment)};
+    button_list[i].children[0].onclick = function() {reaction_button_clicked(this.button_idx,this.innerText,this.dataset.sentiment,this.dataset.audio)};
   }
 
   function sendChat(input) {

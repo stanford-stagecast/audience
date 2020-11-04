@@ -66,19 +66,19 @@
                   <button type="button" data-sentiment="happy" class="reaction-btn">❤️</button>
                 </div>
                 <div class="row-sm-auto">
-                  <button type="button" data-sentiment="happy" class="reaction-btn">👏</button>
+                  <button type="button" data-sentiment="happy" data-audio="clap.mp3" class="reaction-btn">👏</button>
                 </div>
                 <div class="row-sm-auto">
-                  <button type="button" data-sentiment="happy" class="reaction-btn">😂</button>
+                  <button type="button" data-sentiment="happy" data-audio="laugh.mp3" class="reaction-btn">😂</button>
                 </div>
                 <div class="row-sm-auto">
                   <button type="button" data-sentiment="sad" class="reaction-btn">😢</button>
                 </div>
                 <div class="row-sm-auto">
-                  <button type="button" data-sentiment="bored" class="reaction-btn">🥱</button>
+                  <button type="button" data-sentiment="bored"  data-audio="boo.mp3" class="reaction-btn">🥱</button>
                 </div>
                 <div class="row-sm-auto">
-                  <button type="button" data-sentiment="angry" class="reaction-btn">😡</button>
+                  <button type="button" data-sentiment="angry" data-audio="angry.mp3" class="reaction-btn">😡</button>
                 </div>
               </div>
             </div>
@@ -136,6 +136,7 @@
   <script src="{% static 'dist/js/jquery-3.3.1.slim.min.js' %}"></script>
   <script src="{% static 'dist/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'dist/js/hark.bundle.js' %}"></script>
+  <script src="{% static 'dist/js/howler.min.js' %}"></script>
   <script src="{% static 'js/player.js' %}"></script>
   
   {% if params_json %}
