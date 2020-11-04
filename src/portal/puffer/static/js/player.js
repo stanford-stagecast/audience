@@ -749,9 +749,15 @@ function init_recording() {
       const muted_mic_img = 'url(/static/dist/images/mic_muted.svg)';
 
       var mute_audio_button = document.getElementById('mute-audio-button');
-      mute_audio_button.style.backgroundImage = unmuted_mic_img;
-      mute_audio_button.muted = false;
+      // start off muted
+      mute_audio_button.style.backgroundImage = muted_mic_img;
+      mute_audio_button.muted = true;
+      stream.getAudioTracks()[0].enabled = false;
       mute_audio_button.onclick = function() {
+        var unmute_audio_message = document.getElementById('unmute-audio-message');
+        if (unmute_audio_message) {
+          unmute_audio_message.style.display = 'none';
+        }    
         if (mute_audio_button.muted) {
           mute_audio_button.muted = false;
           stream.getAudioTracks()[0].enabled = true;
@@ -763,6 +769,15 @@ function init_recording() {
         }
       };    
 
+      var unmute_audio_here = document.getElementById('unmute-audio-here');
+      unmute_audio_here.onclick = function() {
+        var unmute_audio_message = document.getElementById('unmute-audio-message');
+        unmute_audio_message.style.display = 'none';
+        mute_audio_button.muted = false;
+        stream.getAudioTracks()[0].enabled = true;
+        mute_audio_button.style.backgroundImage = unmuted_mic_img;
+      };
+    
       var audioRecordingIndicator = document.getElementById('audio-recording-indicator');
       var video = document.getElementById('tv-video');
       audioRecordingIndicator.style.display = 'none';
