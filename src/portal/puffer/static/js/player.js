@@ -302,6 +302,12 @@ function ControlBar() {
   var chatSend = document.getElementById('chatbox-entry-send');
   chatSend.onclick = () => {if (chatInput.value) sendChat(chatInput)};
 
+  $("#chatbox-entry-input").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#chatbox-entry-send").click();
+    }
+  });
+
   var from = 0;
   function getChats(from, to) {
     if (to <= from) {
@@ -469,23 +475,24 @@ function ControlBar() {
   full_screen_button.onclick = toggle_full_screen;
   video.ondblclick = toggle_full_screen;
 
-  /* press F to toggle full screen */
-  const LOWERCASE_F = 70;
-  const UPPERCASE_F = 102;
+  // Note: disabling below because it doesn't work well with the chatbox
+  // /* press F to toggle full screen */
+  // const LOWERCASE_F = 70;
+  // const UPPERCASE_F = 102;
 
-  this.onkeydown = function(e) {
-    if (e.keyCode === LOWERCASE_F || e.keyCode === UPPERCASE_F) {
-      toggle_full_screen();
-    } else if (e.keyCode === LEFT_ARROW || e.keyCode === RIGHT_ARROW) {
-      show_control_bar_briefly();
+  // this.onkeydown = function(e) {
+  //   if (e.keyCode === LOWERCASE_F || e.keyCode === UPPERCASE_F) {
+  //     toggle_full_screen();
+  //   } else if (e.keyCode === LEFT_ARROW || e.keyCode === RIGHT_ARROW) {
+  //     show_control_bar_briefly();
 
-      if (e.keyCode === LEFT_ARROW) {
-        set_video_volume(video.volume - 0.05);
-      } else if (e.keyCode === RIGHT_ARROW) {
-        set_video_volume(video.volume + 0.05);
-      }
-    }
-  };
+  //     if (e.keyCode === LEFT_ARROW) {
+  //       set_video_volume(video.volume - 0.05);
+  //     } else if (e.keyCode === RIGHT_ARROW) {
+  //       set_video_volume(video.volume + 0.05);
+  //     }
+  //   }
+  // };
 }
 
 function ChannelBar() {
@@ -557,13 +564,14 @@ function ChannelBar() {
     })(i);
   }
 
-  this.onkeydown = function(e) {
-    if (e.keyCode === DOWN_ARROW) {
-      change_channel(active_idx + 1);
-    } else if (e.keyCode === UP_ARROW) {
-      change_channel(active_idx - 1);
-    }
-  };
+  // Note: disabling below because it doesn't work well with the chatbox (and not needed here)
+  // this.onkeydown = function(e) {
+  //   if (e.keyCode === DOWN_ARROW) {
+  //     change_channel(active_idx + 1);
+  //   } else if (e.keyCode === UP_ARROW) {
+  //     change_channel(active_idx - 1);
+  //   }
+  // };
 }
 
 
@@ -909,17 +917,18 @@ function init_player(params_json, csrf_token) {
   var control_bar = new ControlBar();
   var channel_bar = new ChannelBar();
 
-  document.onkeydown = function(e) {
-    e = e || window.event;
+  // Note: disabling below because it doesn't work well with the chatbox
+  // document.onkeydown = function(e) {
+  //   e = e || window.event;
 
-    /* prevent the default behaviors of arrow keys */
-    if (e.keyCode == UP_ARROW || e.keyCode == DOWN_ARROW ||
-        e.keyCode == LEFT_ARROW || e.keyCode == RIGHT_ARROW)
-      e.preventDefault();
+  //   /* prevent the default behaviors of arrow keys */
+  //   if (e.keyCode == UP_ARROW || e.keyCode == DOWN_ARROW ||
+  //       e.keyCode == LEFT_ARROW || e.keyCode == RIGHT_ARROW)
+  //     e.preventDefault();
 
-    control_bar.onkeydown(e);
-    channel_bar.onkeydown(e);
-  };
+  //   control_bar.onkeydown(e);
+  //   channel_bar.onkeydown(e);
+  // };
 
   // initiate user audio recording
   init_recording();
