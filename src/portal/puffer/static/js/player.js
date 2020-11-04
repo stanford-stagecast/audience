@@ -18,51 +18,14 @@ function load_script(script_path) {
   return new_script;
 }
 
-// var lastTimeHeartAnimationCalled;
-// function showHeartAnimation() {
-//   lastTimeHeartAnimationCalled = Date.now();
-//   // code from https://codepen.io/vivinantony/pen/gbENBB
-//   for (var i = 0; i < 3; i++) { // loop to show 3x2 = 6 hearts 
-//     var r_num = Math.floor(Math.random() * 40) + 1;
-//     var r_size = Math.floor(Math.random() * 65) + 10;
-//     // var r_size = 30;
-//     var r_left = Math.floor(Math.random() * 100) + 1;
-//     var r_bg = Math.floor(Math.random() * 25) + 100;
-//     var r_time = Math.floor(Math.random() * 5) + 5;
-
-//     $('.bg_heart').append("<div class='heart' style='width:" + r_size + "px;height:" + r_size + "px;left:" + r_left + "%;background:rgba(255," + (r_bg - 25) + "," + r_bg + ",1);-webkit-animation:love " + r_time + "s ease;-moz-animation:love " + r_time + "s ease;-ms-animation:love " + r_time + "s ease;animation:love " + r_time + "s ease'></div>");
-
-//     $('.bg_heart').append("<div class='heart' style='width:" + (r_size - 10) + "px;height:" + (r_size - 10) + "px;left:" + (r_left + r_num) + "%;background:rgba(255," + (r_bg - 25) + "," + (r_bg + 25) + ",1);-webkit-animation:love " + (r_time + 5) + "s ease;-moz-animation:love " + (r_time + 5) + "s ease;-ms-animation:love " + (r_time + 5) + "s ease;animation:love " + (r_time + 5) + "s ease'></div>");
-
-//     $('.heart').each(function() {
-//       var top = $(this).css("top").replace(/[^-\d\.]/g, '');
-//       var width = $(this).css("width").replace(/[^-\d\.]/g, '');
-//       if (top <= -100 || width >= 150) {
-//           $(this).detach();
-//       }
-//     });
-//   }
-//   setTimeout(function(){clearHeartAnimation();}, 4000); // remove element after 4000 ms
-// }
-
-// function clearHeartAnimation() {
-//   // called after few seconds elapse without call to showHeartAnimation
-//   // To make sure repeated clicks keep on producing the hearts until there is a lull of 4s
-//   if (Date.now() - lastTimeHeartAnimationCalled > 4000) {
-//     $('.bg_heart').empty();
-//   }
-// }
-
 var lastTimeEmojiAnimationCalled;
 function showEmojiAnimation(emoji) {
   lastTimeEmojiAnimationCalled = Date.now();
   // code from https://codepen.io/vivinantony/pen/gbENBB
-  for (var i = 0; i < 10; i++) { // loop to show 3x2 = 6 hearts //change - frequency
-    var r_num = 15;
-    var r_left = Math.floor(Math.random() * 20) + 70;
-    // var r_num = Math.floor(Math.random() * 40) + 1;
-    var r_size = Math.floor(Math.random()) + 30; //change - size
-    // var r_left = Math.floor(Math.random() * 100) + 1;
+  for (var i = 0; i < 10; i++) { // loop to show 10x2 = 20 emojis
+    var r_num = 15; //offset
+    var r_left = Math.floor(Math.random() * 20) + 70; //to the left
+    var r_size = Math.floor(Math.random()) + 30; //emoji size
     var r_time = Math.floor(Math.random() * 5) + 5;
 
     $('.bg_emoji').append("<div class='emoji_animation' style='width:" + r_size + "px;height:" + r_size + "px;font-size:" + r_size + "px;left:" + r_left + "%;-webkit-animation:love " + r_time + "s ease;-moz-animation:love " + r_time + "s ease;-ms-animation:love " + r_time + "s ease;animation:love " + r_time + "s ease'>"+emoji+"</div>");
@@ -184,10 +147,6 @@ function showFireWorkAnimation() {
             
         this.vx = (Math.random()-0.5)*10;
         this.vy = (Math.random()-0.5)*10;
-        
-        // this.vx = (Math.random()-0.5);
-        // this.vy = (Math.random()-0.5);
-
             
         this.alpha = Math.random()*.5+.5;
             
