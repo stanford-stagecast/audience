@@ -58,13 +58,13 @@ function showEmojiAnimation(emoji) {
   // code from https://codepen.io/vivinantony/pen/gbENBB
   for (var i = 0; i < 3; i++) { // loop to show 3x2 = 6 hearts 
     var r_num = Math.floor(Math.random() * 40) + 1;
-    var r_size = Math.floor(Math.random() * 65) + 20;
+    var r_size = Math.floor(Math.random() * 45) +30;
     var r_left = Math.floor(Math.random() * 100) + 1;
     var r_time = Math.floor(Math.random() * 5) + 5;
 
     $('.bg_emoji').append("<div class='emoji_animation' style='width:" + r_size + "px;height:" + r_size + "px;font-size:" + r_size + "px;left:" + r_left + "%;-webkit-animation:love " + r_time + "s ease;-moz-animation:love " + r_time + "s ease;-ms-animation:love " + r_time + "s ease;animation:love " + r_time + "s ease'>"+emoji+"</div>");
 
-    $('.bg_emoji').append("<div class='emoji_animation' style='width:" + (r_size - 10) + "px;height:" + (r_size - 10) + "px;left:" + (r_left + r_num) + "%;-webkit-animation:love " + (r_time + 5) + "s ease;-moz-animation:love " + (r_time + 5) + "s ease;-ms-animation:love " + (r_time + 5) + "s ease;animation:love " + (r_time + 5) + "s ease'>"+emoji+"</div>");
+    $('.bg_emoji').append("<div class='emoji_animation' style='width:" + (r_size - 10) + "px;height:" + (r_size - 10) + "px;;font-size:" + (r_size - 10) + "px;left:" + (r_left + r_num) + "%;-webkit-animation:love " + (r_time + 5) + "s ease;-moz-animation:love " + (r_time + 5) + "s ease;-ms-animation:love " + (r_time + 5) + "s ease;animation:love " + (r_time + 5) + "s ease'>"+emoji+"</div>");
 
     $('.emoji_animation').each(function() {
       var top = $(this).css("top").replace(/[^-\d\.]/g, '');
@@ -74,13 +74,13 @@ function showEmojiAnimation(emoji) {
       }
     });
   }
-  setTimeout(function(){clearEmojiAnimation();}, 4000); // remove element after 4000 ms
+  setTimeout(function(){clearEmojiAnimation();}, 3000); // remove element after 3000 ms
 }
 
 function clearEmojiAnimation() {
   // called after few seconds elapse without call to showEmojiAnimation
-  // To make sure repeated clicks keep on producing the emojis until there is a lull of 4s
-  if (Date.now() - lastTimeEmojiAnimationCalled > 4000) {
+  // To make sure repeated clicks keep on producing the emojis until there is a lull of 3s
+  if (Date.now() - lastTimeEmojiAnimationCalled > 3000) {
     $('.bg_emoji').empty();
   }
 }
@@ -232,21 +232,15 @@ function ControlBar() {
   var unmute_here = document.getElementById('unmute-here');
   const volume_on_img = 'url(/static/dist/images/volume-on.svg)';
   const volume_off_img = 'url(/static/dist/images/volume-off.svg)';
-  var num_clicked = 0;
   // set callbacks for reaction button press
-  function reaction_button_clicked(button_idx,button_inner_text) {
-    if(num_clicked == 0){
-  	    //play the heart animation after a button is clicked
-        showHeartAnimation();  
-        num_clicked += 1;		
-    } else if (num_clicked == 1) {
-        //play the emoji animation after a button is clicked
-        showEmojiAnimation(button_inner_text);  
-        num_clicked += 1;		
-    }else {
-    	//play the firework animation after a button is clicked
+  function reaction_button_clicked(button_idx,button_inner_text,sentiment) {
+    // play the emoji animation after a button is clicked
+    showEmojiAnimation(button_inner_text);
+    // if sentiment is happy, play firework animation with probability 1/3
+    if (sentiment === "happy") {
+      if (Math.random() <= 1/3) {
         showFireWorkAnimation();
-        num_clicked = 0;
+      }
     }
 
     // button index is simply the position of button in list
@@ -276,7 +270,7 @@ function ControlBar() {
   var button_idx = 0;
   for (var i = 0; i < button_list.length; i++) {
     button_list[i].children[0].button_idx = i;
-    button_list[i].children[0].onclick = function() {reaction_button_clicked(this.button_idx,this.innerText)};
+    button_list[i].children[0].onclick = function() {reaction_button_clicked(this.button_idx,this.innerText,this.dataset.sentiment)};
   }
 
   function sendChat(input) {
