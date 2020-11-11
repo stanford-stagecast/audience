@@ -176,6 +176,7 @@
   position: absolute;
   background: none;
   top: -50%;
+  opacity: 0.5 
 }
 /*firework animation*/
 
@@ -186,7 +187,8 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    pointer-events: none; 
+    pointer-events: none;
+    opacity: 0.4 
 }
 
 

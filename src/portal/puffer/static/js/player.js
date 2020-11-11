@@ -22,7 +22,7 @@ var lastTimeEmojiAnimationCalled;
 function showEmojiAnimation(emoji) {
   lastTimeEmojiAnimationCalled = Date.now();
   // code from https://codepen.io/vivinantony/pen/gbENBB
-  for (var i = 0; i < 10; i++) { // loop to show 10x2 = 20 emojis
+  for (var i = 0; i < 4; i++) { // loop to show 10x2 = 20 emojis
     var r_num = 15; //offset
     var r_left = Math.floor(Math.random() * 20) + 70; //to the left
     var r_size = Math.floor(Math.random()) + 30; //emoji size
@@ -123,6 +123,8 @@ function showFireWorkAnimation() {
     } 
         
     function createFirework() {
+        // xPoint = Math.random()*(w-200)+100;
+        // yPoint = Math.random()+100;
         xPoint = Math.random()*(w-200)+100;
         yPoint = Math.random()*(h-200)+100;
         var nFire = Math.random()*50+100;
