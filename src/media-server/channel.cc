@@ -15,7 +15,7 @@ static const unsigned int DEFAULT_VIDEO_DURATION = 180180;  // 2.002s per chunk
 static const unsigned int DEFAULT_AUDIO_DURATION = 432000;  // 4.8s per chunk
 static const string DEFAULT_VIDEO_CODEC = "video/mp4; codecs=\"avc1.42E020\"";
 static const string DEFAULT_AUDIO_CODEC = "audio/webm; codecs=\"opus\"";
-static const unsigned int DEFAULT_PRESENT_DELAY_CHUNK = 0;  // chunks
+static const unsigned int DEFAULT_PRESENT_DELAY_CHUNK = 15;  // chunks
 static const unsigned int PRESENT_CLEAN_DIFF = 150;  // chunks
 static const unsigned int MAX_UNCHANGED_LIVE_EDGE_MS = 10000;  // ms
 
@@ -446,9 +446,9 @@ void Channel::do_mmap_audio(const fs::path & filepath, const AudioFormat & af)
 
       update_aready_frontier(ts);
 
-      // if (live_ and aready_frontier_) {
-      //   munmap_audio(*aready_frontier_);
-      // }
+      if (live_ and aready_frontier_) {
+        munmap_audio(*aready_frontier_);
+      }
     }
   }
 }

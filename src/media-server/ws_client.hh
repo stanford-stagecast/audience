@@ -126,7 +126,7 @@ public:
   VideoFormat select_video_format();
   AudioFormat select_audio_format();
 
-  static constexpr double MAX_BUFFER_S = 0.48;  /* seconds */
+  static constexpr double MAX_BUFFER_S = 15.0;  /* seconds */
 
 private:
   uint64_t connection_id_;
