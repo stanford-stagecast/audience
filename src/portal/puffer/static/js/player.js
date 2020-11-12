@@ -306,6 +306,26 @@ function ControlBar() {
   var chatSend = document.getElementById('chatbox-entry-send');
   chatSend.onclick = () => {if (chatInput.value) sendChat(chatInput)};
 
+  var chatAvailable = false;
+  (() => {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status == 200) {
+          chatAvailable = true;
+        } else {
+          chatAvailable = false;
+          document.getElementById('chatbox-entry-input').placeholder = "Sorry, chat is not currently available";
+          document.getElementById('chatbox-entry-input').disabled = true;
+          document.getElementById('chatbox-entry-input').style.border = "none";
+          document.getElementById('chatbox-entry-send').style.visibility = "hidden";
+        }
+      }
+    }
+    xhr.open('GET', '/is_chat_available/');
+    xhr.send();
+  })();
+
   $("#chatbox-entry-input").keyup(function(event) {
     if (event.keyCode === 13) {
         $("#chatbox-entry-send").click();
