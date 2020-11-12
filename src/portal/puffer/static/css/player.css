@@ -376,6 +376,44 @@
   background-color: #d1ecf1 /*#fefefa*/;
 }
 
+#fullscreen-chatbox {
+  width: 20%;
+  height: 50%;
+  background-color: rgba(0, 0, 0, 0.4);;
+  position: absolute;
+  bottom: 120px;
+  left: 20px;
+  visibility: hidden;
+}
+
+#fs-chat-toggle {
+  position: absolute;
+  bottom: 70px;
+  left: 20px;
+
+  font-size: 15px;
+  color: #d1ecf1;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #1e90ff;
+  padding: 5px;
+  /*padding-top: 10px;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  visibility: hidden;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 #chatbox-title {
   height: 15%;
   width: 100%;
@@ -399,16 +437,25 @@
   font-size: 14px;
 }
 
-#chatbox-replay ul {
+#fullscreen-chatbox-replay {
+  height: 100%;
+  overflow: scroll;
+  padding: 15px;
+  padding-bottom: 0;
+  font-size: 14px;
+}
+
+#chatbox-replay ul, #fullscreen-chatbox-replay ul {
   padding: 0;
   list-style-type: none;
 }
 
-#chatbox-replay ul li {
+#chatbox-replay ul li, #fullscreen-chatbox-replay ul li {
   padding-bottom: 5px;
 }
 
-#chatbox-replay ul li:last-child {
+#chatbox-replay ul li:last-child,
+#fullscreen-chatbox-replay ul li:last-child {
   padding-bottom: 0;
 }
 
@@ -416,6 +463,10 @@
   color: #1e90ff;
   font-weight: bold;
   padding-right: 5px;
+}
+
+#fullscreen-chatbox-replay ul li .chat-replay-username {
+  color: white;
 }
 
 #chatbox-entry {
@@ -468,7 +519,7 @@
   outline: none;
 }
 
-#chatbox-entry-send {
+#chatbox-entry-send, #fullscreen-chatbox-entry-send {
   font-size: 18px;
   color: #d1ecf1;
   width: 30px;

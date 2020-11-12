@@ -4,6 +4,7 @@ const LEFT_ARROW = 37;
 const UP_ARROW = 38;
 const RIGHT_ARROW = 39;
 const DOWN_ARROW = 40;
+const ESCAPE_KEY = 27;
 
 var chatFromTime = 0;
 
@@ -319,9 +320,13 @@ function ControlBar() {
 
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
+      var replay = chatReplay;
+      var replayList = chatReplayList;
+
       chatFromTime = to;
       if (xhr.readyState == XMLHttpRequest.DONE) {
-        var shouldScroll = chatReplay.scrollTop + chatReplay.offsetHeight > chatReplay.scrollHeight - 10;
+        var chatReplayShouldScroll = chatReplay.scrollTop + chatReplay.offsetHeight > chatReplay.scrollHeight - 10;
+        var fsChatReplayShouldScroll = fsChatReplay.scrollTop + fsChatReplay.offsetHeight > fsChatReplay.scrollHeight - 10;
 
         var chatList = JSON.parse(xhr.responseText);
         chatList = chatList.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1);
@@ -333,10 +338,13 @@ function ControlBar() {
           </li>`;
         });
         chatReplayList.innerHTML += chatHTML;
+        fsChatReplayList.innerHTML += chatHTML;
 
-        console.log(shouldScroll, chatReplay.scrollTop + chatReplay.offsetHeight, chatReplay.scrollHeight);
-        if (shouldScroll) {
+        if (chatReplayShouldScroll) {
           chatReplay.scrollTop = chatReplay.scrollHeight;
+        }
+        if (fsChatReplayShouldScroll) {
+          fsChatReplay.scrollTop = fsChatReplay.scrollHeight;
         }
       }
     }
@@ -347,11 +355,26 @@ function ControlBar() {
       'from': from, 'to': to,
     }));
   }
+
   var chatReplay = document.getElementById('chatbox-replay');
   var chatReplayList = document.getElementById('chatbox-replay-list');
+  var fsChat = document.getElementById('fullscreen-chatbox');
+  var fsChatReplay = document.getElementById('fullscreen-chatbox-replay');
+  var fsChatReplayList = document.getElementById('fullscreen-chatbox-replay-list');
+
   setInterval(() => {
     getChats(chatFromTime, video.currentTime);
   }, 500);
+
+  var chatToggle = document.getElementById('fs-chat-toggle');
+  var toggleFullscreenChat = function() {
+    if (fsChat.style.visibility === "visible") {
+      fsChat.style.visibility = "hidden"
+    } else {
+      fsChat.style.visibility = "visible";
+    }
+  };
+  chatToggle.onclick = toggleFullscreenChat;
 
   /* video is muted by default */
   video.volume = 0;
@@ -449,6 +472,8 @@ function ControlBar() {
         (document.msFullscreenElement && document.msFullscreenElement !== null);
 
     if (!isInFullScreen) {
+      chatToggle.style.visibility = "visible";
+      fsChat.style.visibility = "visible";
       full_screen_button.style.backgroundImage = exit_fullscreen_img;
 
       if (tv_container.requestFullscreen) {
@@ -461,6 +486,8 @@ function ControlBar() {
         tv_container.msRequestFullscreen();
       }
     } else {
+      chatToggle.style.visibility = "hidden";
+      fsChat.style.visibility = "hidden";
       full_screen_button.style.backgroundImage = enter_fullscreen_img;
 
       if (document.exitFullscreen) {
@@ -477,6 +504,28 @@ function ControlBar() {
 
   full_screen_button.onclick = toggle_full_screen;
   video.ondblclick = toggle_full_screen;
+
+  var handleFullScreen = function (e) {
+    var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+        (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+        (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+        (document.msFullscreenElement && document.msFullscreenElement !== null);
+
+    if (!!isInFullScreen) {
+      chatToggle.style.visibility = "visible";
+      fsChat.style.visibility = "visible";
+      full_screen_button.style.backgroundImage = exit_fullscreen_img;
+    } else {
+      chatToggle.style.visibility = "hidden";
+      fsChat.style.visibility = "hidden";
+      full_screen_button.style.backgroundImage = enter_fullscreen_img;
+    }
+  }
+
+  document.addEventListener("fullscreenchange", handleFullScreen);
+  document.addEventListener("msfullscreenchange", handleFullScreen);
+  document.addEventListener("mozfullscreenchange", handleFullScreen);
+  document.addEventListener("webkitfullscreenchange", handleFullScreen);
 
   // Note: disabling below because it doesn't work well with the chatbox
   // /* press F to toggle full screen */
