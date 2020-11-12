@@ -44,6 +44,21 @@ def player(request):
 
 
 @login_required(login_url='/accounts/login/')
+def is_chat_available(request):
+    try:
+        user = request.user
+        if user is None:
+            raise Exception("Bad request")
+    except Exception as e:
+        print(e)
+        return HttpResponse("Invalid or malformed parameters", status=400)
+
+    if UserProfile.objects.get(user=user).chat_blocked:
+        return HttpResponse("Not Available", status=403)
+    return HttpResponse("Available", status=200)
+
+
+@login_required(login_url='/accounts/login/')
 def audience_feedback(request):
     try:
         user = request.user
@@ -55,6 +70,9 @@ def audience_feedback(request):
     except Exception as e:
         print(e)
         return HttpResponse("Invalid or malformed parameters", status=400)
+
+    if UserProfile.objects.get(user=user).chat_blocked:
+        return HttpResponse("Chat not available", status=403)
 
     try:
         feedback_model = AudienceFeedback(

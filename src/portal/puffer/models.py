@@ -12,6 +12,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,
                                 primary_key=True)
     last_session_key = models.CharField(max_length=64, default='')
+    chat_blocked = models.BooleanField(default=False)
 
 
 def user_logged_in_handler(sender, request, user, **kwargs):

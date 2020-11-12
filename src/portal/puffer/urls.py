@@ -15,6 +15,7 @@ urlpatterns = [
     path('feedback/', views.audience_feedback, name='feedback'),
     path('audiofeedback/', views.audio_feedback, name='audio_feedback'),
     path('get_chat/', views.get_chat, name='get_chat'),
+    path('is_chat_available/', views.is_chat_available, name='is_chat_available'),
 ]
 
 if settings.DEBUG:
