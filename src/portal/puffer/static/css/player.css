@@ -445,6 +445,7 @@
   padding: 15px;
   padding-bottom: 0;
   font-size: 14px;
+  color: white;
 }
 
 #chatbox-replay ul, #fullscreen-chatbox-replay ul {
@@ -534,4 +535,10 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    height: 5px;
+    background: transparent;
 }
