@@ -792,6 +792,8 @@ function init_recording() {
   if (!navigator || !navigator.mediaDevices) {
     var mute_audio_button = document.getElementById('mute-audio-button');
     mute_audio_button.style.display = "none";
+    var unmute_audio_message = document.getElementById('unmute-audio-message');
+    unmute_audio_message.style.display = 'none';
     return;
   }
 
@@ -940,6 +942,8 @@ function init_recording() {
       console.log("disabled audio feedback.");
       var mute_audio_button = document.getElementById('mute-audio-button');
       mute_audio_button.style.display = "none";
+      var unmute_audio_message = document.getElementById('unmute-audio-message');
+      unmute_audio_message.style.display = 'none';  
     });
 }
 
