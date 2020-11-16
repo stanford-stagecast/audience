@@ -232,7 +232,7 @@ function ControlBar() {
       reactionText: button_inner_text,
       reactionIdx: button_idx
     };
-    ws_client.send_client_reaction(reaction_msg);
+    // ws_client.send_client_reaction(reaction_msg);
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/feedback/');
@@ -788,6 +788,12 @@ function get_screen_size() {
 function init_recording() {
   // we use hark library from 
   // https://github.com/otalk/hark
+  
+  if (!navigator || !navigator.mediaDevices) {
+    var mute_audio_button = document.getElementById('mute-audio-button');
+    mute_audio_button.style.display = "none";
+    return;
+  }
 
   navigator.mediaDevices.getUserMedia({audio: true, video: false})
   .then(
