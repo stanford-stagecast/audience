@@ -1,7 +1,5 @@
 html {
   -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-  scrollbar-height: none;  /* Firefox */
 }
 
 /* Chrome, Safari and Opera syntax */
@@ -443,6 +441,8 @@ html {
   padding: 15px;
   padding-bottom: 0;
   font-size: 14px;
+  scrollbar-width: none;  /* Firefox */
+  scrollbar-height: none;  /* Firefox */
 }
 
 #fullscreen-chatbox-replay {
@@ -452,6 +452,8 @@ html {
   padding-bottom: 0;
   font-size: 14px;
   color: white;
+  scrollbar-width: none;  /* Firefox */
+  scrollbar-height: none;  /* Firefox */
 }
 
 #chatbox-replay ul, #fullscreen-chatbox-replay ul {
