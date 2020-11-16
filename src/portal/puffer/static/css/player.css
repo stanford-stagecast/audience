@@ -1,3 +1,9 @@
+html {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  scrollbar-height: none;  /* Firefox */
+}
+
 /* Chrome, Safari and Opera syntax */
 #tv-container:-webkit-full-screen {
   width: 100%;
